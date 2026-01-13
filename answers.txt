@@ -1,0 +1,12 @@
+Ex3:
+1. docker compose build
+
+2.docker compose up -d
+
+3.docker compose ps
+
+4.docker compose down
+
+BONUS::
+l'aventage principale de docker-compose dans une architecture microservices ,c'est la gestion 
+de plusieurs conteneurs ,aussi il crée un réseau qui permet la communication entre services
