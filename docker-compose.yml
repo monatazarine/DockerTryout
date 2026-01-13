@@ -1,0 +1,58 @@
+
+
+services:
+  mongo:
+    image: mongo:7
+    container_name: mongo
+    ports:
+      - "27017:27017"
+    volumes:
+      - mongo_data:/data/db
+    networks:
+      - backend
+
+  auth-service:
+    build: ./auth-service
+    container_name: auth-service
+    depends_on:
+      - mongo
+    environment:
+      - MONGO_URI=mongodb://mongo:27017/authdb
+    ports:
+      - "3012:3012"
+    networks:
+      - backend
+
+  produit-service:
+    build: ./produit-service
+    container_name: produit-service
+    depends_on:
+      - mongo
+    environment:
+      - MONGO_URI=mongodb://mongo:27017/produitdb
+    ports:
+      - "3013:3013"
+    networks:
+      - backend
+
+  commande-service:
+    build: ./commande-service
+    container_name: commande-service
+    depends_on:
+      - mongo
+      - auth-service
+      - produit-service
+    environment:
+      - MONGO_URI=mongodb://mongo:27017/commandedb
+      - PRODUIT_SERVICE_URL=http://produit-service:3013
+    ports:
+      - "3014:3014"
+    networks:
+      - backend
+
+networks:
+  backend:
+    driver: bridge
+
+volumes:
+  mongo_data:
